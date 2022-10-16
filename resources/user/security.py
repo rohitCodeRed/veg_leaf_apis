@@ -1,5 +1,5 @@
 from hmac import compare_digest
-from user import User
+from resources.user.user import User
 
 
 def authenticate(username, password):

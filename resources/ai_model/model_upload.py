@@ -7,10 +7,10 @@ import sqlite3
 import os
 
 
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif','h5'])
 
 
-class AiModel(Resource):
+class UploadModel(Resource):
     TABLE_NAME = 'ai_saved_models'
 
     parser = reqparse.RequestParser()
@@ -44,24 +44,23 @@ class AiModel(Resource):
     def post(self, role):
         if self.find_by_role(role):
             return {'message': "An model with role '{}' already exists.".format(role)}
-
-        data = AiModel.parser.parse_args()
+        
+        data = UploadModel.parser.parse_args()
         
         image_file = data['file']
         
-
         if image_file.filename == '':
             return {"message": "An error occurred uploading the model."}, 400
 
-        
         try:
             if image_file and self.allowed_file(image_file.filename):
                 filename = secure_filename(image_file.filename)
                 image_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'] +"models/", filename))
-
+            else:
+                return {"message": "Model is not alowed to upload"}, 200
             modelData = {'role': role, 'model_name': image_file.filename}
             
-            AiModel.insert(modelData)
+            UploadModel.insert(modelData)
             return modelData
         except:
             return {"message": "An error occurred saving the model."}, 500
@@ -103,38 +102,10 @@ class AiModel(Resource):
         connection.commit()
         connection.close()
 
-        return {'message': 'Model '+file_name +'deleted'}
-
-    # @jwt_required()
-    # def put(self, role):
-    #     data = AiModel.parser.parse_args()
-    #     item = self.find_by_role(role)
-    #     updated_model = {'role': role, 'model_name': data['model_name']}
-    #     if item is None:
-    #         try:
-    #             AiModel.insert(updated_model)
-    #         except:
-    #             return {"message": "An error occurred inserting the model."}
-    #     else:
-    #         try:
-    #             AiModel.update(updated_model)
-    #         except:
-    #             return {"message": "An error occurred updating the model."}
-    #     return updated_model
-
-    # @classmethod
-    # def update(cls, model):
-    #     connection = sqlite3.connect('data.db')
-    #     cursor = connection.cursor()
-
-    #     query = "UPDATE {table} SET price=? WHERE name=?".format(table=cls.TABLE_NAME)
-    #     cursor.execute(query, (model['model_name'], model['role']))
-
-    #     connection.commit()
-    #     connection.close()
+        return {'message': 'Model: '+file_name +' deleted'}
 
 
-class AiModelList(Resource):
+class ModelList(Resource):
     TABLE_NAME = 'ai_saved_models'
 
     def get(self):

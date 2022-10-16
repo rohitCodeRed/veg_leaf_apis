@@ -5,25 +5,29 @@ import os
 #from flask import Flask, request, redirect, url_for
 #from werkzeug.utils import secure_filename
 
-from security import authenticate, identity
-from user import UserRegister
-from ai_model import AiModel, AiModelList
-from leaf_image import LeafImage
+from resources.user.security import authenticate, identity
+from resources.user.user import UserRegister
+from resources.ai_model.model_upload import UploadModel,ModelList
+from resources.image_classifier.leaf_image import LeafImage
+from resources.price_predict.wheat_price_predict import PricePredict
 
 UPLOAD_FOLDER = './uploads/'
 
 app = Flask(__name__)
 app.config['PROPAGATE_EXCEPTIONS'] = True
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MODEL_PATH'] = UPLOAD_FOLDER + 'models/'
+app.config['PREDICTION_DATA_PATH'] = './data/prediction'
 app.secret_key = 'veg_leaf_classifier'
 api = Api(app)
 
 jwt = JWT(app, authenticate, identity)
 
-api.add_resource(AiModel, '/model/upload/<string:role>')
-api.add_resource(AiModelList, '/models')
+api.add_resource(UploadModel, '/model/upload/<string:role>')
+api.add_resource(ModelList, '/models')
 api.add_resource(UserRegister, '/register')
 api.add_resource(LeafImage, '/leaf/upload_and_classify')
+api.add_resource(PricePredict,'/predict_wheat_price')
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)  # important to mention debug=True

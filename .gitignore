@@ -1,3 +1,10 @@
 ./venv
 ./__pycache__
 ./data.db
+./data/prediction/
+./data/classification/train/
+./data/classification/test/
+
+__pycache__/
+*.py[cod]
+!**/__pycache__/
