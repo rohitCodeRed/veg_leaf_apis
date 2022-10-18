@@ -24,6 +24,12 @@ class LeafImage(Resource):
 
 
     @jwt_required()
+    def get(self):
+        return {"class_names":current_app.config['DEFAULT_LEAF_CLASS_NAMES']}, 200
+
+
+        
+    @jwt_required()
     def post(self):
         data = LeafImage.parser.parse_args()
         image_file = data['file']
