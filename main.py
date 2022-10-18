@@ -1,3 +1,4 @@
+from datetime import timedelta
 from flask import Flask
 from flask_restful import Api
 from flask_jwt import JWT
@@ -14,14 +15,22 @@ from resources.price_predict.wheat_price_predict import PricePredict
 UPLOAD_FOLDER = './uploads/'
 
 app = Flask(__name__)
+
 app.config['PROPAGATE_EXCEPTIONS'] = True
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MODEL_PATH'] = UPLOAD_FOLDER + 'models/'
+app.config['IMAGE_PATH'] = UPLOAD_FOLDER + 'images/'
 app.config['PREDICTION_DATA_PATH'] = './data/prediction'
+app.config['PREDICTION_DATA_FILE_NAME']='wheat_price.csv'
+app.config['CLASSIFICATION_DATA_PATH'] = './data/classification'
+app.config['DEFAULT_LEAF_CLASS_NAMES']=['pepper','potato','tomato']
+
 app.secret_key = 'veg_leaf_classifier'
 api = Api(app)
 
+app.config['JWT_EXPIRATION_DELTA'] = timedelta(seconds=1800)
 jwt = JWT(app, authenticate, identity)
+
 
 api.add_resource(UploadModel, '/model/upload/<string:role>')
 api.add_resource(ModelList, '/models')

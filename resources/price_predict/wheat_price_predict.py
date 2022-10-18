@@ -8,7 +8,7 @@ from helpers.prediction import predictionModel
 
 
 
-DATA_FILE_NAME = 'wheat_price.csv'
+#DATA_FILE_NAME = 'wheat_price.csv'
 
 class PricePredict(Resource):
     TABLE_NAME = 'ai_saved_models'
@@ -43,7 +43,7 @@ class PricePredict(Resource):
 
     @jwt_required()
     def get(self):
-        csv_path = os.path.join(current_app.config['PREDICTION_DATA_PATH'],DATA_FILE_NAME)
+        csv_path = os.path.join(current_app.config['PREDICTION_DATA_PATH'],current_app.config['PREDICTION_DATA_FILE_NAME'])
         data = pd.read_csv(csv_path)
         response={}
         for col in data.columns:
@@ -70,7 +70,7 @@ class PricePredict(Resource):
                     converted_params[key] = [float(val)]
                 
                 model_path = os.path.join(current_app.config['MODEL_PATH'],model_name['model']['model_name'])
-                data_path = os.path.join(current_app.config['PREDICTION_DATA_PATH'],DATA_FILE_NAME)
+                data_path = os.path.join(current_app.config['PREDICTION_DATA_PATH'],current_app.config['PREDICTION_DATA_FILE_NAME'])
 
                 model = predictionModel(data_path,model_path)
                 price = model.predict(converted_params)
