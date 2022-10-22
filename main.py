@@ -2,6 +2,7 @@ from datetime import timedelta
 from flask import Flask
 from flask_restful import Api
 from flask_jwt import JWT
+from flask_cors import CORS
 import os
 #from flask import Flask, request, redirect, url_for
 #from werkzeug.utils import secure_filename
@@ -15,6 +16,7 @@ from resources.price_predict.wheat_price_predict import PricePredict
 UPLOAD_FOLDER = './uploads/'
 
 app = Flask(__name__)
+CORS(app)
 
 app.config['PROPAGATE_EXCEPTIONS'] = True
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER

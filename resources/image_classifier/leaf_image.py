@@ -1,5 +1,6 @@
 import sqlite3
 from flask import current_app
+from flask_cors import cross_origin, CORS
 from flask_restful import Resource, reqparse
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
@@ -27,8 +28,7 @@ class LeafImage(Resource):
     def get(self):
         return {"class_names":current_app.config['DEFAULT_LEAF_CLASS_NAMES']}, 200
 
-
-        
+   
     @jwt_required()
     def post(self):
         data = LeafImage.parser.parse_args()
