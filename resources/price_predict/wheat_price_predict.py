@@ -1,4 +1,5 @@
-from flask import current_app
+from flask import current_app, jsonify
+from flask_cors import cross_origin
 from flask_restful import Resource, reqparse
 import os
 import pandas as pd
@@ -12,7 +13,7 @@ from helpers.prediction import predictionModel
 
 class PricePredict(Resource):
     TABLE_NAME = 'ai_saved_models'
-
+    
     parser = reqparse.RequestParser()
     parser.add_argument('average_temperature',
                         type=str,
@@ -41,8 +42,11 @@ class PricePredict(Resource):
                         )
 
 
-    @jwt_required()
+    # @jwt_required()
+    # @cross_origin()
     def get(self):
+        # response.headers.add("Access-Control-Allow-Origin", "*")
+        print("reached...")
         csv_path = os.path.join(current_app.config['PREDICTION_DATA_PATH'],current_app.config['PREDICTION_DATA_FILE_NAME'])
         data = pd.read_csv(csv_path)
         response={}
@@ -58,7 +62,7 @@ class PricePredict(Resource):
         return {"data":response}, 200
 
 
-    #@jwt_required()
+    @jwt_required()
     def post(self):
         bodyParams = PricePredict.parser.parse_args()
         
