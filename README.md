@@ -31,4 +31,4 @@ Rest Apis which used to upload leaf photo and detect it with AI CNN model of Ten
 --form 'file=@"./DEFAULT_MODELS/veg_leaf_classification_model.h5"'
 
 
-Fore more Detail please refer meduim page: 
+### Fore more Detail please refer meduim page: https://medium.com/@alwaysHopeGood/veg-leaf-ai-53d657c257bb
